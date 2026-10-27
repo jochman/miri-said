@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository contains “מירי אמרה?”, a static Hebrew quote quiz designed for GitHub Pages and direct browser use. Source files live at the repository root:
+This repository contains “מה מירי אמרה?”, a static Hebrew quote quiz designed for GitHub Pages and direct browser use. Source files live at the repository root:
 
 - `app.js`: game state, rendering, scoring, and media playback.
 - `style.css`: responsive layout, right-to-left presentation, and interaction states.

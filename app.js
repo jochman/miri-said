@@ -44,15 +44,15 @@ async function shareGame() {
   if (ui.share.disabled) return;
   const url = document.querySelector('link[rel="canonical"]').href;
   const text = ui.result.hidden
-    ? 'מירי אמרה? האם תצליחו להבדיל בין ציטוט אמיתי למומצא?'
-    : `עניתי נכון על ${score} מתוך ${questions.length} שאלות במשחק ״מירי אמרה?״. כמה תצליחו אתם?`;
+    ? 'מה מירי אמרה? האם תצליחו להבדיל בין ציטוט אמיתי למומצא?'
+    : `עניתי נכון על ${score} מתוך ${questions.length} שאלות במשחק ״מה מירי אמרה?״. כמה תצליחו אתם?`;
   ui.share.disabled = true;
   ui['share-status'].textContent = '';
   ui['share-fallback'].hidden = true;
   try {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'מירי אמרה?', text, url });
+        await navigator.share({ title: 'מה מירי אמרה?', text, url });
         return;
       } catch (error) {
         if (error.name === 'AbortError') return;
