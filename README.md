@@ -1,5 +1,11 @@
 # מירי אמרה?
 
+## Search and sharing metadata
+
+Edit `seo.json` to update the Hebrew title, summary, public site URL, or social preview image, then run `npm run build`. The build generates canonical, Open Graph, X/Twitter, and JSON-LD metadata in `index.html`, plus `robots.txt` and `sitemap.xml`. Keep the image dimensions and alternative text in sync with the selected image; its URL must be publicly accessible. The current square illustration uses a summary card on X.
+
+The public URL is `https://whatmirisaid.games/`. If the domain changes, update `seo.json` and rebuild. Commit all generated files together. After publishing, submit `https://whatmirisaid.games/sitemap.xml` in Google Search Console; indexing and refreshed social previews depend on the providers crawling the published site.
+
 משחק סטטי המתאים ל־GitHub Pages. אפשר לפתוח את `index.html` ישירות בדפדפן. הקובץ כולל בתוכו את העיצוב, הציטוטים וקוד המשחק ויכול לפעול גם בפני עצמו. להפעלה מקומית עם נגן YouTube מוטמע, מריצים `npm start` ופותחים `http://localhost:8000`. נדרש Node.js, ללא התקנת חבילות.
 
 ## עריכת ציטוטים
