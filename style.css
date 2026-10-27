@@ -94,3 +94,46 @@ main{align-items:flex-start}
   .actions{gap:8px}
   .actions button{font-size:15px}
 }
+
+/* Budget the composition against the viewport, including mobile sharing. */
+.page{height:100svh;height:100dvh;min-height:0}
+main{min-height:0}
+.layout{height:100%;min-height:0;gap:6%;padding:clamp(16px,3dvh,32px) 0}
+.intro{position:static;display:flex;flex-direction:column;height:100%;max-height:100%;min-height:0}
+.intro .eyebrow{margin-bottom:clamp(10px,2dvh,24px)}
+.intro h1{font-size:clamp(48px,min(8vw,16dvh),122px)}
+.intro-copy{margin-block:clamp(12px,3dvh,30px);font-size:clamp(16px,min(2vw,3dvh),23px)}
+.meta{padding-top:12px}
+#desktop-media-slot{flex:1;min-height:0;height:auto;margin-block-start:16px}
+.game{height:100%;min-height:0}
+.quote-mark{margin-top:clamp(16px,4dvh,48px)}
+.quote{font-size:clamp(23px,min(2.5vw,4.5dvh),37px)}
+#desktop-media-slot .quote-video iframe,#desktop-media-slot .quote-media video{max-height:24dvh}
+@media(max-width:800px){
+  .layout{grid-template-rows:auto minmax(0,1fr) auto;gap:12px;padding-block:12px}
+  .intro{height:auto}
+  .intro h1{font-size:32px}
+  .meta{padding-top:4px}
+  .game,.game.is-result{height:100%;min-height:0;padding:18px}
+  .game-controls{padding-top:12px}
+  .quote-mark{margin-top:20px;height:40px;font-size:80px}
+  .quote{font-size:clamp(20px,3.4dvh,26px);margin-bottom:16px}
+  .share-panel{padding-top:8px}
+  .share-panel h2{margin-bottom:6px}
+  .share-action{min-height:48px;padding:4px;gap:2px}
+  .share-action svg{width:18px;height:18px}
+  .quote-media{margin-block-start:12px;padding-block-start:10px}
+  .quote-media iframe,.quote-media video{max-height:140px}
+  .feedback{padding-top:12px}
+  .feedback h2{font-size:20px}
+}
+@media(max-height:600px){
+  .layout{padding-block:10px;gap:10px}
+  .game{padding:16px}
+  .intro h1{font-size:40px}
+  .intro-copy{font-size:16px;margin-block:12px}
+  .quote-mark{margin-top:16px;height:30px;font-size:64px}
+  .quote{font-size:21px;margin-bottom:12px}
+  .game-controls{padding-top:8px}
+  button{min-height:44px}
+}

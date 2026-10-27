@@ -1,8 +1,21 @@
 import { readFile, writeFile } from 'node:fs/promises';
+import { build } from 'esbuild';
+import { fileURLToPath } from 'node:url';
 
 const read = name => readFile(new URL(name, import.meta.url), 'utf8');
-const [rawQuotes, rawCss, js, pattern, favicon, rawSeo] = await Promise.all([
-  read('quotes.json'), read('style.css'), read('app.js'),
+const [rawQuotes, rawCss, bundle, pattern, favicon, rawSeo] = await Promise.all([
+  read('quotes.json'), read('style.css'), build({
+    absWorkingDir: fileURLToPath(new URL('.', import.meta.url)),
+    entryPoints: ['src/main.jsx'],
+    bundle: true,
+    write: false,
+    format: 'iife',
+    jsx: 'automatic',
+    jsxImportSource: 'preact',
+    target: ['es2020'],
+    minify: true,
+    legalComments: 'eof',
+  }),
   readFile(new URL('assets/miri-transit-pattern.png', import.meta.url)),
   readFile(new URL('assets/miri-favicon.png', import.meta.url)),
   read('seo.json'),
@@ -79,7 +92,7 @@ const page = `<!doctype html>
     <noscript><p>יש להפעיל JavaScript בדפדפן כדי לשחק.</p></noscript>
   </div>
   <script>window.offlineQuotes = ${data};</script>
-  <script>${js}</script>
+  <script>${bundle.outputFiles[0].text.replaceAll('</script', '<\\/script')}</script>
 </body>
 </html>
 `;
