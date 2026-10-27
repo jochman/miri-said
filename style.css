@@ -31,6 +31,15 @@ main{align-items:flex-start}
 .game-controls{flex-shrink:0;padding-top:20px}
 .game-controls .next{margin-top:0}
 .game-controls .prompt{margin:0 0 12px}
+.share{width:100%;min-height:44px;margin-block-start:12px;padding:8px 12px;background:transparent;color:#202b27;font-size:14px}
+.share:hover{background:#e7e3d7}
+.share:active{transform:translateY(1px)}
+.share:disabled{cursor:wait;opacity:.6;transform:none}
+.share-status{margin:8px 0 0;font-size:13px;line-height:1.5;color:#202b27}
+.share-status:empty{display:none}
+.share-fallback{display:block;margin-block-start:8px;font-size:13px;line-height:1.5}
+.share-fallback textarea{display:block;width:100%;margin-block-start:6px;padding:8px;border:1px solid #202b27;background:#fffdf7;color:#202b27;font:inherit;font-size:16px;resize:vertical}
+.share-fallback textarea:focus-visible{outline:3px solid #e85b3c;outline-offset:3px}
 .card-top,.progress{flex-shrink:0}
 .quote:focus,.result-title:focus{outline:none}
 .feedback{margin-top:0;padding-bottom:8px}

@@ -13,8 +13,8 @@ function shuffle(items) {
 
 function mountGame(data) {
   catalog = data;
-  app.innerHTML = `<div class="layout"><section class="intro"><p class="eyebrow">האם אתם באמת יודעים מה</p><h1>מירי<br><span>אמרה?</span></h1><p class="intro-copy">יש דברים שרק מירי רגב יכולה להגיד. <strong>או שלא?</strong><br>${catalog.length} ציטוטים, חלקם אמיתיים וחלקם המצאה. נראה אתכם מבדילים.</p><div class="meta"><span>${catalog.length} שאלות</span><span>בלי גוגל, כן?</span></div><div id="desktop-media-slot"></div></section><section class="game" aria-label="משחק הציטוטים"><div class="card-top"><span id="card-label">האם מירי אמרה את זה?</span><span class="counter" id="counter"></span></div><div class="progress" role="progressbar" aria-label="התקדמות במשחק" aria-valuemin="0" aria-valuemax="${catalog.length}" aria-valuenow="0"><span id="progress-fill"></span></div><div class="game-content"><div id="question"><div class="quote-mark" aria-hidden="true">"</div><blockquote class="quote" id="quote" tabindex="-1"></blockquote><div id="feedback" aria-live="polite" hidden></div><div id="mobile-media-slot"></div></div><div id="result" hidden><div class="result-number" id="result-number"></div><h2 class="result-title" id="result-title" tabindex="-1"></h2><p class="result-copy" id="result-copy"></p></div></div><div class="game-controls"><p class="prompt" id="prompt">אז מה אתם אומרים?</p><div class="actions" id="answers"><button class="yes" data-answer="true">כן, היא אמרה</button><button class="no" data-answer="false">לא, המצאתם</button></div><button class="next" id="next" hidden>לציטוט הבא ←</button><button class="next" id="restart" hidden>משחקים שוב ←</button></div></section></div>`;
-  ui = Object.fromEntries(['card-label', 'counter', 'progress-fill', 'question', 'quote', 'feedback', 'result', 'result-number', 'result-title', 'result-copy', 'prompt', 'answers', 'next', 'restart'].map(id => [id, app.querySelector(`#${id}`)]));
+  app.innerHTML = `<div class="layout"><section class="intro"><p class="eyebrow">האם אתם באמת יודעים מה</p><h1>מירי<br><span>אמרה?</span></h1><p class="intro-copy">יש דברים שרק מירי רגב יכולה להגיד. <strong>או שלא?</strong><br>${catalog.length} ציטוטים, חלקם אמיתיים וחלקם המצאה. נראה אתכם מבדילים.</p><div class="meta"><span>${catalog.length} שאלות</span><span>בלי גוגל, כן?</span></div><div id="desktop-media-slot"></div></section><section class="game" aria-label="משחק הציטוטים"><div class="card-top"><span id="card-label">האם מירי אמרה את זה?</span><span class="counter" id="counter"></span></div><div class="progress" role="progressbar" aria-label="התקדמות במשחק" aria-valuemin="0" aria-valuemax="${catalog.length}" aria-valuenow="0"><span id="progress-fill"></span></div><div class="game-content"><div id="question"><div class="quote-mark" aria-hidden="true">"</div><blockquote class="quote" id="quote" tabindex="-1"></blockquote><div id="feedback" aria-live="polite" hidden></div><div id="mobile-media-slot"></div></div><div id="result" hidden><div class="result-number" id="result-number"></div><h2 class="result-title" id="result-title" tabindex="-1"></h2><p class="result-copy" id="result-copy"></p></div></div><div class="game-controls"><p class="prompt" id="prompt">אז מה אתם אומרים?</p><div class="actions" id="answers"><button class="yes" data-answer="true">כן, היא אמרה</button><button class="no" data-answer="false">לא, המצאתם</button></div><button class="next" id="next" hidden>לציטוט הבא ←</button><button class="next" id="restart" hidden>משחקים שוב ←</button><button class="share" id="share" type="button">שתפו את המשחק</button><p class="share-status" id="share-status" role="status"></p><label class="share-fallback" id="share-fallback" hidden>העתיקו את הטקסט לשיתוף<textarea id="share-text" readonly rows="3" dir="auto"></textarea></label></div></section></div>`;
+  ui = Object.fromEntries(['card-label', 'counter', 'progress-fill', 'question', 'quote', 'feedback', 'result', 'result-number', 'result-title', 'result-copy', 'prompt', 'answers', 'next', 'restart', 'share', 'share-status', 'share-fallback', 'share-text'].map(id => [id, app.querySelector(`#${id}`)]));
   ui.card = app.querySelector('.game');
   ui.content = app.querySelector('.game-content');
   ui.progress = app.querySelector('.progress');
@@ -36,7 +36,41 @@ function mountGame(data) {
     else renderResult();
   });
   ui.restart.addEventListener('click', () => startGame());
+  ui.share.addEventListener('click', shareGame);
   startGame(false);
+}
+
+async function shareGame() {
+  if (ui.share.disabled) return;
+  const url = document.querySelector('link[rel="canonical"]').href;
+  const text = ui.result.hidden
+    ? 'מירי אמרה? האם תצליחו להבדיל בין ציטוט אמיתי למומצא?'
+    : `עניתי נכון על ${score} מתוך ${questions.length} שאלות במשחק ״מירי אמרה?״. כמה תצליחו אתם?`;
+  ui.share.disabled = true;
+  ui['share-status'].textContent = '';
+  ui['share-fallback'].hidden = true;
+  try {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'מירי אמרה?', text, url });
+        return;
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(`${text}\n${url}`);
+      ui['share-status'].textContent = 'הטקסט והקישור הועתקו!';
+    } catch {
+      ui['share-fallback'].hidden = false;
+      ui['share-text'].value = `${text}\n${url}`;
+      ui['share-text'].focus();
+      ui['share-text'].select();
+      ui['share-status'].textContent = 'אפשר להעתיק את הטקסט ולשלוח לחברים.';
+    }
+  } finally {
+    ui.share.disabled = false;
+  }
 }
 
 function startGame(focus = true) {
@@ -49,6 +83,9 @@ function startGame(focus = true) {
 function renderQuestion(focus = true) {
   const q = questions[index];
   answered = false;
+  ui.share.textContent = 'שתפו את המשחק';
+  ui['share-status'].textContent = '';
+  ui['share-fallback'].hidden = true;
   ui.card.classList.remove('is-correct', 'is-wrong');
   ui['card-label'].textContent = 'האם מירי אמרה את זה?';
   ui.counter.textContent = `${String(index + 1).padStart(2, '0')} / ${questions.length}`;
@@ -211,6 +248,9 @@ function renderResult() {
   ui.answers.hidden = true;
   ui.next.hidden = true;
   ui.restart.hidden = false;
+  ui.share.textContent = 'שתפו את התוצאה';
+  ui['share-status'].textContent = '';
+  ui['share-fallback'].hidden = true;
   ui.content.scrollTop = 0;
   ui['result-title'].focus({ preventScroll: true });
 }
