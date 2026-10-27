@@ -13,8 +13,19 @@ function shuffle(items) {
 
 function mountGame(data) {
   catalog = data;
-  app.innerHTML = `<div class="layout"><section class="intro"><p class="eyebrow">האם אתם באמת יודעים מה</p><h1>מירי<br><span>אמרה?</span></h1><p class="intro-copy">יש דברים שרק מירי רגב יכולה להגיד. <strong>או שלא?</strong><br>${catalog.length} ציטוטים, חלקם אמיתיים וחלקם המצאה. נראה אתכם מבדילים.</p><div class="meta"><span>${catalog.length} שאלות</span><span>בלי גוגל, כן?</span></div><div id="desktop-media-slot"></div></section><section class="game" aria-label="משחק הציטוטים"><div class="card-top"><span id="card-label">האם מירי אמרה את זה?</span><span class="counter" id="counter"></span></div><div class="progress" role="progressbar" aria-label="התקדמות במשחק" aria-valuemin="0" aria-valuemax="${catalog.length}" aria-valuenow="0"><span id="progress-fill"></span></div><div class="game-content"><div id="question"><div class="quote-mark" aria-hidden="true">"</div><blockquote class="quote" id="quote" tabindex="-1"></blockquote><div id="feedback" aria-live="polite" hidden></div><div id="mobile-media-slot"></div></div><div id="result" hidden><div class="result-number" id="result-number"></div><h2 class="result-title" id="result-title" tabindex="-1"></h2><p class="result-copy" id="result-copy"></p></div></div><div class="game-controls"><p class="prompt" id="prompt">אז מה אתם אומרים?</p><div class="actions" id="answers"><button class="yes" data-answer="true">כן, היא אמרה</button><button class="no" data-answer="false">לא, המצאתם</button></div><button class="next" id="next" hidden>לציטוט הבא ←</button><button class="next" id="restart" hidden>משחקים שוב ←</button><button class="share" id="share" type="button">שתפו את המשחק</button><p class="share-status" id="share-status" role="status"></p><label class="share-fallback" id="share-fallback" hidden>העתיקו את הטקסט לשיתוף<textarea id="share-text" readonly rows="3" dir="auto"></textarea></label></div></section></div>`;
-  ui = Object.fromEntries(['card-label', 'counter', 'progress-fill', 'question', 'quote', 'feedback', 'result', 'result-number', 'result-title', 'result-copy', 'prompt', 'answers', 'next', 'restart', 'share', 'share-status', 'share-fallback', 'share-text'].map(id => [id, app.querySelector(`#${id}`)]));
+  app.innerHTML = `<div class="layout"><section class="intro"><p class="eyebrow">האם אתם באמת יודעים מה</p><h1>מירי<br><span>אמרה?</span></h1><p class="intro-copy">יש דברים שרק מירי רגב יכולה להגיד. <strong>או שלא?</strong><br>${catalog.length} ציטוטים, חלקם אמיתיים וחלקם המצאה. נראה אתכם מבדילים.</p><div class="meta"><span>${catalog.length} שאלות</span><span>בלי גוגל, כן?</span></div><section class="share-panel" aria-labelledby="share-heading">
+    <h2 id="share-heading">שתפו את המשחק</h2>
+    <div class="share-actions">
+      <button class="share-action" id="instagram-share" type="button" title="העתקת הטקסט והקישור לשיתוף באינסטגרם"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg><span>אינסטגרם</span></button>
+      <a class="share-action" id="whatsapp-share" target="_blank" rel="noopener noreferrer" aria-label="שיתוף בוואטסאפ (נפתח בחלון חדש)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-12 7L3 20l1.5-5A8 8 0 1 1 20 11.5Z"/><path d="M8 7.5c0 4 2.5 6.5 6.5 7l1-2-2-1-1 1c-1.5-.5-2.5-1.5-3-3l1-1-1-2Z"/></svg><span>וואטסאפ</span></a>
+      <a class="share-action" id="facebook-share" target="_blank" rel="noopener noreferrer" aria-label="שיתוף בפייסבוק (נפתח בחלון חדש)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 21v-8H18l.5-4h-4V7c0-1 .5-1.5 1.5-1.5h2V2.2L15 2c-3 0-4.5 1.8-4.5 5v2H7v4h3.5v8"/></svg><span>פייסבוק</span></a>
+      <button class="share-action" id="share" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M5 12v8h14v-8"/></svg><span>שיתוף נוסף</span></button>
+    </div>
+    <p class="share-status" id="share-status" role="status"></p>
+    <a class="instagram-open" id="instagram-open" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" hidden>פתיחת Instagram להדבקת הטקסט ↗</a>
+    <label class="share-fallback" id="share-fallback" hidden>העתיקו את הטקסט לשיתוף<textarea id="share-text" readonly rows="3" dir="auto"></textarea></label>
+  </section><div id="desktop-media-slot"></div></section><section class="game" aria-label="משחק הציטוטים"><div class="card-top"><span id="card-label">האם מירי אמרה את זה?</span><span class="counter" id="counter"></span></div><div class="progress" role="progressbar" aria-label="התקדמות במשחק" aria-valuemin="0" aria-valuemax="${catalog.length}" aria-valuenow="0"><span id="progress-fill"></span></div><div class="game-content"><div id="question"><div class="quote-mark" aria-hidden="true">"</div><blockquote class="quote" id="quote" tabindex="-1"></blockquote><div id="feedback" aria-live="polite" hidden></div><div id="mobile-media-slot"></div></div><div id="result" hidden><div class="result-number" id="result-number"></div><h2 class="result-title" id="result-title" tabindex="-1"></h2><p class="result-copy" id="result-copy"></p></div></div><div class="game-controls"><p class="prompt" id="prompt">אז מה אתם אומרים?</p><div class="actions" id="answers"><button class="yes" data-answer="true">כן, היא אמרה</button><button class="no" data-answer="false">לא, המצאתם</button></div><button class="next" id="next" hidden>לציטוט הבא ←</button><button class="next" id="restart" hidden>משחקים שוב ←</button></div></section></div>`;
+  ui = Object.fromEntries(['card-label', 'counter', 'progress-fill', 'question', 'quote', 'feedback', 'result', 'result-number', 'result-title', 'result-copy', 'prompt', 'answers', 'next', 'restart', 'share-heading', 'instagram-share', 'instagram-open', 'whatsapp-share', 'facebook-share', 'share', 'share-status', 'share-fallback', 'share-text'].map(id => [id, app.querySelector(`#${id}`)]));
   ui.card = app.querySelector('.game');
   ui.content = app.querySelector('.game-content');
   ui.progress = app.querySelector('.progress');
@@ -36,23 +47,41 @@ function mountGame(data) {
     else renderResult();
   });
   ui.restart.addEventListener('click', () => startGame());
-  ui.share.addEventListener('click', shareGame);
+  ui.share.addEventListener('click', () => shareGame());
+  ui['instagram-share'].addEventListener('click', () => shareGame('instagram'));
   startGame(false);
 }
 
-async function shareGame() {
-  if (ui.share.disabled) return;
+function getShareData() {
   const url = document.querySelector('link[rel="canonical"]').href;
   const text = ui.result.hidden
     ? 'מה מירי אמרה? האם תצליחו להבדיל בין ציטוט אמיתי למומצא?'
     : `עניתי נכון על ${score} מתוך ${questions.length} שאלות במשחק ״מה מירי אמרה?״. כמה תצליחו אתם?`;
-  ui.share.disabled = true;
+  return { title: 'מה מירי אמרה?', text, url };
+}
+
+function updateSharing() {
+  const { text, url } = getShareData();
+  ui['share-heading'].textContent = ui.result.hidden ? 'שתפו את המשחק' : 'שתפו את התוצאה';
+  ui['whatsapp-share'].href = `https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`;
+  ui['facebook-share'].href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
   ui['share-status'].textContent = '';
   ui['share-fallback'].hidden = true;
+  ui['instagram-open'].hidden = true;
+}
+
+async function shareGame(platform = 'general') {
+  if (ui.share.disabled) return;
+  const { title, text, url } = getShareData();
+  ui.share.disabled = true;
+  ui['instagram-share'].disabled = true;
+  ui['share-status'].textContent = '';
+  ui['share-fallback'].hidden = true;
+  ui['instagram-open'].hidden = true;
   try {
-    if (navigator.share) {
+    if (platform === 'general' && navigator.share) {
       try {
-        await navigator.share({ title: 'מה מירי אמרה?', text, url });
+        await navigator.share({ title, text, url });
         return;
       } catch (error) {
         if (error.name === 'AbortError') return;
@@ -60,7 +89,9 @@ async function shareGame() {
     }
     try {
       await navigator.clipboard.writeText(`${text}\n${url}`);
-      ui['share-status'].textContent = 'הטקסט והקישור הועתקו!';
+      ui['share-status'].textContent = platform === 'instagram'
+        ? 'הטקסט והקישור הועתקו — הדביקו אותם בהודעה או בסטורי באינסטגרם.'
+        : 'הטקסט והקישור הועתקו!';
     } catch {
       ui['share-fallback'].hidden = false;
       ui['share-text'].value = `${text}\n${url}`;
@@ -69,7 +100,9 @@ async function shareGame() {
       ui['share-status'].textContent = 'אפשר להעתיק את הטקסט ולשלוח לחברים.';
     }
   } finally {
+    ui['instagram-open'].hidden = platform !== 'instagram';
     ui.share.disabled = false;
+    ui['instagram-share'].disabled = false;
   }
 }
 
@@ -83,9 +116,6 @@ function startGame(focus = true) {
 function renderQuestion(focus = true) {
   const q = questions[index];
   answered = false;
-  ui.share.textContent = 'שתפו את המשחק';
-  ui['share-status'].textContent = '';
-  ui['share-fallback'].hidden = true;
   ui.card.classList.remove('is-correct', 'is-wrong');
   ui['card-label'].textContent = 'האם מירי אמרה את זה?';
   ui.counter.textContent = `${String(index + 1).padStart(2, '0')} / ${questions.length}`;
@@ -93,6 +123,7 @@ function renderQuestion(focus = true) {
   ui.progress.setAttribute('aria-valuenow', index);
   ui.question.hidden = false;
   ui.result.hidden = true;
+  updateSharing();
   ui.quote.textContent = q.quote;
   ui.feedback.hidden = true;
   ui.feedback.innerHTML = '';
@@ -248,9 +279,7 @@ function renderResult() {
   ui.answers.hidden = true;
   ui.next.hidden = true;
   ui.restart.hidden = false;
-  ui.share.textContent = 'שתפו את התוצאה';
-  ui['share-status'].textContent = '';
-  ui['share-fallback'].hidden = true;
+  updateSharing();
   ui.content.scrollTop = 0;
   ui['result-title'].focus({ preventScroll: true });
 }
