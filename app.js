@@ -1,6 +1,7 @@
 const app = document.querySelector('#app');
 let catalog = [], questions = [], index = 0, score = 0, answered = false;
 let ui;
+let responses = [], reviewIndex = 0, reviewing = false;
 
 function shuffle(items) {
   const shuffled = [...items];
@@ -29,6 +30,22 @@ function mountGame(data) {
   ui.card = app.querySelector('.game');
   ui.content = app.querySelector('.game-content');
   ui.progress = app.querySelector('.progress');
+  ui.review = document.createElement('button');
+  ui.review.className = 'next';
+  ui.review.textContent = 'צפו בתשובות שלכם';
+  ui.review.hidden = true;
+  ui.restart.before(ui.review);
+  ui.reviewControls = document.createElement('div');
+  ui.reviewControls.className = 'review-controls';
+  ui.reviewControls.hidden = true;
+  ui.reviewControls.innerHTML = '<nav class="review-navigation" aria-label="דפדוף בתשובות"><button class="no" id="review-previous">→ הקודם</button><button class="no" id="review-next">הבא ←</button></nav><button class="next" id="review-result">חזרה לתוצאה</button>';
+  ui.restart.after(ui.reviewControls);
+  ui.reviewPrevious = ui.reviewControls.querySelector('#review-previous');
+  ui.reviewNext = ui.reviewControls.querySelector('#review-next');
+  ui.review.addEventListener('click', () => { reviewIndex = 0; renderReview(); });
+  ui.reviewPrevious.addEventListener('click', () => { reviewIndex--; renderReview(); });
+  ui.reviewNext.addEventListener('click', () => { reviewIndex++; renderReview(); });
+  ui.reviewControls.querySelector('#review-result').addEventListener('click', renderResult);
   ui.media = document.createElement('section');
   ui.media.className = 'quote-media';
   ui.media.setAttribute('aria-label', 'הקלטת הציטוט');
@@ -54,7 +71,7 @@ function mountGame(data) {
 
 function getShareData() {
   const url = document.querySelector('link[rel="canonical"]').href;
-  const text = ui.result.hidden
+  const text = responses.length < questions.length
     ? 'מה מירי אמרה? האם תצליחו להבדיל בין ציטוט אמיתי למומצא?'
     : `עניתי נכון על ${score} מתוך ${questions.length} שאלות במשחק ״מה מירי אמרה?״. כמה תצליחו אתם?`;
   return { title: 'מה מירי אמרה?', text, url };
@@ -62,7 +79,7 @@ function getShareData() {
 
 function updateSharing() {
   const { text, url } = getShareData();
-  ui['share-heading'].textContent = ui.result.hidden ? 'שתפו את המשחק' : 'שתפו את התוצאה';
+  ui['share-heading'].textContent = responses.length < questions.length ? 'שתפו את המשחק' : 'שתפו את התוצאה';
   ui['whatsapp-share'].href = `https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
   ui['facebook-share'].href = `https://www.facebook.com/login.php?next=${encodeURIComponent(facebookUrl)}`;
@@ -113,6 +130,8 @@ function startGame(focus = true) {
   questions = shuffle(catalog);
   index = 0;
   score = 0;
+  responses = [];
+  reviewing = false;
   renderQuestion(focus);
 }
 
@@ -135,6 +154,9 @@ function renderQuestion(focus = true) {
   ui.answers.hidden = false;
   ui.next.hidden = true;
   ui.restart.hidden = true;
+  ui.review.hidden = true;
+  ui.reviewControls.hidden = true;
+  ui.card.classList.remove('is-result');
   ui.content.scrollTop = 0;
   if (focus) ui.quote.focus({ preventScroll: true });
 }
@@ -241,22 +263,15 @@ function loadXVideo(container) {
   });
 }
 function answer(choice) {
-  if (answered) return;
+  if (answered || reviewing) return;
   answered = true;
   const q = questions[index], correct = choice === q.real;
+  responses[index] = choice;
   if (correct) score++;
   ui.card.classList.add(correct ? 'is-correct' : 'is-wrong');
   ui.prompt.hidden = true;
   ui.answers.hidden = true;
-  ui.feedback.className = 'feedback';
-  ui.feedback.innerHTML = `<h2>${correct ? '✓ בול! תשובה נכונה.' : '✕ לא הפעם.'}</h2><p><strong>${q.real ? q.sourceStatus === 'unverified' ? 'הציטוט מיוחס למירי רגב; המקור טרם אומת.' : 'מירי רגב אכן אמרה את זה.' : 'הציטוט הזה מומצא.'}</strong> ${q.real ? q.context : 'אבל מתאים למירי, לא?'}</p>${q.real && q.source ? `<a href="${q.source}" target="_blank" rel="noopener noreferrer">לכתבה עם הציטוט ↗</a>` : ''}`;
-  ui.feedback.hidden = false;
-  const media = renderAudio(q.audio, q.source) || renderVideo(q.video);
-  ui.media.innerHTML = media ? '<h2 class="media-heading">הציטוט במקור</h2>' + media : '';
-  ui.media.hidden = !media;
-  ui.media.scrollTop = 0;
-  loadXVideo(ui.media);
-  loadHlsVideo(ui.media);
+  renderFeedback(q, correct);
   ui.next.textContent = index === questions.length - 1 ? 'לתוצאה שלי ←' : 'לציטוט הבא ←';
   ui.next.hidden = false;
   ui['progress-fill'].style.width = `${(index + 1) / questions.length * 100}%`;
@@ -266,9 +281,48 @@ function answer(choice) {
   ui.next.focus({ preventScroll: true });
 }
 
+function renderFeedback(q, correct) {
+  ui.feedback.className = 'feedback';
+  ui.feedback.innerHTML = `<h2>${correct ? '✓ בול! תשובה נכונה.' : '✕ לא הפעם.'}</h2><p><strong>${q.real ? q.sourceStatus === 'unverified' ? 'הציטוט מיוחס למירי רגב; המקור טרם אומת.' : 'מירי רגב אכן אמרה את זה.' : 'הציטוט הזה מומצא.'}</strong> ${q.real ? q.context : 'אבל מתאים למירי, לא?'}</p>${q.real && q.source ? `<a href="${q.source}" target="_blank" rel="noopener noreferrer">לכתבה עם הציטוט ↗</a>` : ''}`;
+  ui.feedback.hidden = false;
+  const media = renderAudio(q.audio, q.source) || renderVideo(q.video);
+  ui.media.innerHTML = media ? '<h2 class="media-heading">הציטוט במקור</h2>' + media : '';
+  ui.media.hidden = !media;
+  ui.media.scrollTop = 0;
+  loadXVideo(ui.media);
+  loadHlsVideo(ui.media);
+}
+
+function renderReview() {
+  reviewing = true;
+  const q = questions[reviewIndex], choice = responses[reviewIndex];
+  clearMedia();
+  ui.card.classList.remove('is-result', 'is-correct', 'is-wrong');
+  ui.card.classList.add(choice === q.real ? 'is-correct' : 'is-wrong');
+  ui['card-label'].textContent = 'התשובות שלכם · כל הציטוטים';
+  ui.counter.textContent = `${reviewIndex + 1} / ${questions.length}`;
+  ui.result.hidden = true;
+  ui.question.hidden = false;
+  ui.quote.textContent = q.quote;
+  renderFeedback(q, choice === q.real);
+  const response = document.createElement('p');
+  response.className = 'review-answer';
+  response.textContent = `התשובה שלכם: ${choice ? 'כן, היא אמרה' : 'לא, המצאתם'}`;
+  ui.feedback.prepend(response);
+  ui.review.hidden = true;
+  ui.restart.hidden = true;
+  ui.reviewControls.hidden = false;
+  ui.reviewPrevious.disabled = reviewIndex === 0;
+  ui.reviewNext.disabled = reviewIndex === questions.length - 1;
+  ui.content.scrollTop = 0;
+  ui.quote.focus({ preventScroll: true });
+}
+
 function renderResult() {
+  reviewing = false;
   const message = score / questions.length >= .8 ? 'אתם מכירים את מירי ממש טוב.' : score / questions.length >= .5 ? 'יש לכם אוזן טובה לציטוטים.' : 'כנראה שלא תמיד קל להבדיל בין המציאות לדמיון.';
   ui.card.classList.remove('is-correct', 'is-wrong');
+  ui.card.classList.add('is-result');
   ui['card-label'].textContent = 'סיימתם את המשחק';
   ui.counter.textContent = 'התוצאה שלכם';
   ui.question.hidden = true;
@@ -282,9 +336,12 @@ function renderResult() {
   ui.answers.hidden = true;
   ui.next.hidden = true;
   ui.restart.hidden = false;
+  ui.review.hidden = false;
+  ui.reviewControls.hidden = true;
   updateSharing();
   ui.content.scrollTop = 0;
   ui['result-title'].focus({ preventScroll: true });
+  if (window.matchMedia('(max-width: 800px)').matches) ui.card.scrollIntoView({ block: 'center' });
 }
 
 if (location.protocol === 'file:') {

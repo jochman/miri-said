@@ -31,6 +31,16 @@ main{align-items:flex-start}
 .game-controls{flex-shrink:0;padding-top:20px}
 .game-controls .next{margin-top:0}
 .game-controls .prompt{margin:0 0 12px}
+.game.is-result .game-content{display:flex;text-align:center}
+#result{width:100%;margin-block:auto;padding-block:20px}
+.result-number{margin:0 0 16px;text-align:center;font-size:clamp(64px,10vw,110px)}
+.result-title{font-size:clamp(21px,3vw,26px);line-height:1.35}
+.result-copy{font-size:15px}
+.is-result .game-controls{display:grid;gap:10px}
+.is-result #restart{background:transparent;color:#202b27}
+.review-navigation{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.review-navigation button:disabled{opacity:.45;cursor:default;transform:none}
+.review-answer{font-weight:800}
 .share-panel{display:none;margin-block-start:24px;padding-block-start:18px;border-top:1px solid #b9b8aa;max-width:440px}
 .share-panel h2{margin:0 0 10px;font-size:15px;font-weight:800}
 .share-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
@@ -68,6 +78,7 @@ main{align-items:flex-start}
   .share-panel h2{font-size:13px;margin-block-end:8px}
   .share-action{min-height:60px;gap:4px}
   .game{height:calc(100svh - 255px);min-height:360px;padding:22px}
+  .game.is-result{height:auto;min-height:440px}
   .game.is-correct{box-shadow:6px 6px 0 #267044}
   .game.is-wrong{box-shadow:6px 6px 0 #b63e33}
   .quote-mark{margin-top:30px}
