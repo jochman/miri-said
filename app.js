@@ -16,9 +16,9 @@ function mountGame(data) {
   app.innerHTML = `<div class="layout"><section class="intro"><p class="eyebrow">האם אתם באמת יודעים מה</p><h1>מירי<br><span>אמרה?</span></h1><p class="intro-copy">יש דברים שרק מירי רגב יכולה להגיד. <strong>או שלא?</strong><br>${catalog.length} ציטוטים, חלקם אמיתיים וחלקם המצאה. נראה אתכם מבדילים.</p><div class="meta"><span>${catalog.length} שאלות</span><span>בלי גוגל, כן?</span></div><section class="share-panel" aria-labelledby="share-heading">
     <h2 id="share-heading">שתפו את המשחק</h2>
     <div class="share-actions">
-      <button class="share-action" id="instagram-share" type="button" title="העתקת הטקסט והקישור לשיתוף באינסטגרם"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg><span>אינסטגרם</span></button>
-      <a class="share-action" id="whatsapp-share" target="_blank" rel="noopener noreferrer" aria-label="שיתוף בוואטסאפ (נפתח בחלון חדש)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-12 7L3 20l1.5-5A8 8 0 1 1 20 11.5Z"/><path d="M8 7.5c0 4 2.5 6.5 6.5 7l1-2-2-1-1 1c-1.5-.5-2.5-1.5-3-3l1-1-1-2Z"/></svg><span>וואטסאפ</span></a>
-      <a class="share-action" id="facebook-share" target="_blank" rel="noopener noreferrer" aria-label="שיתוף בפייסבוק (נפתח בחלון חדש)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 21v-8H18l.5-4h-4V7c0-1 .5-1.5 1.5-1.5h2V2.2L15 2c-3 0-4.5 1.8-4.5 5v2H7v4h3.5v8"/></svg><span>פייסבוק</span></a>
+      <button class="share-action" id="instagram-share" type="button" title="פתיחת תפריט השיתוף — בחרו Instagram אם הוא זמין"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg><span>אינסטגרם</span></button>
+      <a class="share-action" id="whatsapp-share" target="_blank" rel="noopener noreferrer" aria-label="שיתוף בוואטסאפ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-12 7L3 20l1.5-5A8 8 0 1 1 20 11.5Z"/><path d="M8 7.5c0 4 2.5 6.5 6.5 7l1-2-2-1-1 1c-1.5-.5-2.5-1.5-3-3l1-1-1-2Z"/></svg><span>וואטסאפ</span></a>
+      <a class="share-action" id="facebook-share" target="_blank" rel="noopener noreferrer" aria-label="שיתוף בפייסבוק" title="פתיחת Facebook לשיתוף — ייתכן שתידרש התחברות"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 21v-8H18l.5-4h-4V7c0-1 .5-1.5 1.5-1.5h2V2.2L15 2c-3 0-4.5 1.8-4.5 5v2H7v4h3.5v8"/></svg><span>פייסבוק</span></a>
       <button class="share-action" id="share" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M5 12v8h14v-8"/></svg><span>שיתוף נוסף</span></button>
     </div>
     <p class="share-status" id="share-status" role="status"></p>
@@ -64,7 +64,9 @@ function updateSharing() {
   const { text, url } = getShareData();
   ui['share-heading'].textContent = ui.result.hidden ? 'שתפו את המשחק' : 'שתפו את התוצאה';
   ui['whatsapp-share'].href = `https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`;
-  ui['facebook-share'].href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  ui['facebook-share'].href = `https://www.facebook.com/login.php?next=${encodeURIComponent(facebookUrl)}`;
+  ui.share.querySelector('span').textContent = typeof navigator.share === 'function' ? 'שיתוף במכשיר' : 'העתקת קישור';
   ui['share-status'].textContent = '';
   ui['share-fallback'].hidden = true;
   ui['instagram-open'].hidden = true;
@@ -79,7 +81,8 @@ async function shareGame(platform = 'general') {
   ui['share-fallback'].hidden = true;
   ui['instagram-open'].hidden = true;
   try {
-    if (platform === 'general' && navigator.share) {
+    // Both buttons must call share directly from the click, before any awaited work.
+    if (typeof navigator.share === 'function') {
       try {
         await navigator.share({ title, text, url });
         return;
@@ -100,7 +103,7 @@ async function shareGame(platform = 'general') {
       ui['share-status'].textContent = 'אפשר להעתיק את הטקסט ולשלוח לחברים.';
     }
   } finally {
-    ui['instagram-open'].hidden = platform !== 'instagram';
+    ui['instagram-open'].hidden = platform !== 'instagram' || !ui['share-status'].textContent;
     ui.share.disabled = false;
     ui['instagram-share'].disabled = false;
   }
