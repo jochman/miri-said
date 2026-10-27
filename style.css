@@ -64,7 +64,7 @@ main{align-items:flex-start}
   .intro h1 br{display:none}
   .intro h1 span{margin-inline-start:8px}
   .meta{border:0;padding-top:8px;font-size:12px}
-  .share-panel{display:block;max-width:none;margin-block-start:14px;padding-block-start:12px}
+  .share-panel{display:block;max-width:none;margin-block-start:0;padding-block-start:12px}
   .share-panel h2{font-size:13px;margin-block-end:8px}
   .share-action{min-height:60px;gap:4px}
   .game{height:calc(100svh - 255px);min-height:360px;padding:22px}
