@@ -1,0 +1,4 @@
+Generated with the built-in image generation tool.
+Reference: assets/miri-transit-pattern.png (style only).
+
+Create a favicon asset for the Miri Regev Hebrew quote quiz. Use the attached background wallpaper ONLY as a visual style reference. Output one single large centered recognizable caricature head of Israeli politician Miri Regev, dark shoulder-length straight hair, cheerful confident expression. Head only, no shoulders. Very simple bold flat editorial illustration with a thick dark charcoal outline and terracotta accent, a few large clear facial features so it remains readable at 32 by 32 pixels. Square composition with the head filling 85% of the canvas and a small even transparent margin. Actual transparent background, no text, no letters, no other objects, no wallpaper or multiple heads.

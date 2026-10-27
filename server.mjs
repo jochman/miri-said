@@ -7,6 +7,9 @@ const files = {
   '/quotes.json': ['quotes.json', 'application/json; charset=utf-8'],
   '/style.css': ['style.css', 'text/css; charset=utf-8'],
   '/app.js': ['app.js', 'text/javascript; charset=utf-8'],
+  '/assets/miri-transit-pattern.png': ['assets/miri-transit-pattern.png', 'image/png'],
+  '/favicon.ico': ['assets/miri-favicon.png', 'image/png'],
+  '/assets/miri-favicon.png': ['assets/miri-favicon.png', 'image/png'],
 };
 const port = Number(process.env.PORT || 8000);
 const server = createServer(async (req, res) => {
