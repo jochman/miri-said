@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f0e5">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>מירי אמרה? משחק הציטוטים</title>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800;900&display=swap');
+:root{font-family:Heebo,Arial,sans-serif;color:#18211f;background:#f5f0e5}*{box-sizing:border-box}body{margin:0}.page{min-height:100vh;display:flex;flex-direction:column;max-width:1600px;margin:auto;padding:0 5.5%}header{height:96px;border-bottom:1px solid #b9b8aa;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;text-decoration:none;color:inherit;font-weight:900;font-size:18px;line-height:1}.brand span{font-size:54px;line-height:.7;color:#ee5d3d;margin-left:8px}small,footer{font-size:12px;font-weight:700;color:#5d6660}main{flex:1;display:flex;align-items:center}.layout{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,.78fr);gap:8%;padding:70px 0 84px}.eyebrow{font-size:13px;font-weight:800;color:#bd4b32;margin:0 0 24px}.intro h1{font-size:clamp(64px,8vw,122px);line-height:.92;letter-spacing:-.065em;margin:0;font-weight:900}.intro h1 span{color:#ed5d3c}.intro-copy{font-size:clamp(18px,2vw,23px);line-height:1.5;max-width:440px;margin:30px 0}.meta{border-top:1px solid #b9b8aa;padding-top:18px;color:#59635d;font-size:13px;font-weight:700}.meta span+span:before{content:'✳';margin:0 20px;color:#ed5d3c}.game{background:#fffdf7;border:1px solid #202b27;box-shadow:9px 9px 0 #202b27;padding:clamp(24px,4vw,48px);min-height:490px;display:flex;flex-direction:column}.card-top{display:flex;justify-content:space-between;gap:15px;font-size:12px;font-weight:800}.counter{direction:ltr}.progress{height:4px;background:#e7e3d7;margin-top:16px}.progress span{display:block;background:#ee5d3d;height:100%;transition:width .25s}.quote-mark{font-family:Georgia,serif;font-size:100px;line-height:.55;color:#ed5d3c;margin-top:48px;height:55px}.quote{font-size:clamp(25px,2.5vw,37px);line-height:1.28;font-weight:800;letter-spacing:-.025em;margin:0 0 28px}.prompt{font-weight:700;color:#667069;font-size:14px;margin:auto 0 16px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}button{font:inherit;cursor:pointer;border:2px solid #202b27;min-height:58px;font-weight:800;font-size:16px;transition:transform .15s}button:hover{transform:translateY(-2px)}button:focus-visible,a:focus-visible{outline:3px solid #e85b3c;outline-offset:4px}.yes,.next{background:#202b27;color:#fffdf7}.no{background:transparent;color:#202b27}.next{width:100%;margin-top:22px}.feedback{border-top:1px solid #d9d7cc;padding-top:18px;margin-top:auto}.feedback h2{font-size:22px;margin:0 0 8px}.feedback p{line-height:1.6;margin:0 0 8px;font-size:15px}.feedback a{color:#a43e29;font-weight:800;text-underline-offset:3px}.result-number{font-size:clamp(80px,10vw,130px);font-weight:900;letter-spacing:-.07em;line-height:1;margin:48px 0 15px;direction:ltr;text-align:right}.result-number small{font-size:.35em}.result-title{font-size:26px;margin:0 0 12px}.result-copy{line-height:1.6;margin:0 0 auto}footer{border-top:1px solid #b9b8aa;min-height:65px;display:flex;align-items:center}@media(max-width:800px){.page{padding:0 6%}header{height:76px}.layout{grid-template-columns:1fr;gap:34px;padding:48px 0 64px}.intro h1{font-size:clamp(62px,15vw,95px)}.intro-copy{margin:20px 0;font-size:18px}.game{min-height:440px;padding:26px;box-shadow:6px 6px 0 #202b27}.quote-mark{margin-top:38px}.quote{font-size:27px}footer{padding:18px 0}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+
+.quote-video{margin-top:20px}.quote-video iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#18211f;margin-bottom:10px}.quote-video a{font-size:14px}
+.quote-video-x iframe{aspect-ratio:auto;background:transparent}.quote-video-x .twitter-tweet{margin-inline:0!important;max-width:100%!important}
+.intro,.game{min-width:0}
+.quote-media{margin-block-start:24px;max-width:600px;min-width:0}
+.media-heading{font-size:14px;font-weight:800;margin:0 0 12px;color:#59635d}
+.quote-media .quote-video{margin-top:0}
+.quote-media a{display:inline-flex;align-items:center;min-height:44px;color:#a43e29;font-weight:800;text-underline-offset:3px}
+.quote-media iframe{max-width:100%}
+
+/* The card stays in place while its question, feedback and result change. */
+[hidden]{display:none!important}
+main{align-items:flex-start}
+.layout{align-items:start}
+.intro{position:sticky;top:70px}
+.game{height:clamp(540px,82dvh,900px);min-height:0;transition:background-color .2s,border-color .2s,box-shadow .2s}
+.game-content{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:8px;margin-inline-end:-8px;overflow-anchor:none}
+.game-controls{flex-shrink:0;padding-top:20px}
+.game-controls .next{margin-top:0}
+.game-controls .prompt{margin:0 0 12px}
+.card-top,.progress{flex-shrink:0}
+.quote:focus,.result-title:focus{outline:none}
+.feedback{margin-top:0;padding-bottom:8px}
+.game.is-correct{background:#e8f4e7;border-color:#267044;box-shadow:9px 9px 0 #267044}
+.game.is-correct .feedback h2{color:#185b32}
+.game.is-correct .feedback{border-color:#a6c9ad}
+.game.is-correct .next{background:#185b32;border-color:#185b32}
+.game.is-wrong{background:#fce8e4;border-color:#b63e33;box-shadow:9px 9px 0 #b63e33}
+.game.is-wrong .feedback h2{color:#9b2822}
+.game.is-wrong .feedback{border-color:#deb2ac}
+.game.is-wrong .next{background:#9b2822;border-color:#9b2822}
+@media(max-width:800px){
+  .layout{grid-template-columns:minmax(0,1fr);gap:18px;padding:20px 0 24px}
+  .intro{position:static}
+  .intro .eyebrow,.intro-copy{display:none}
+  .intro h1{font-size:40px;line-height:1.1;letter-spacing:-.05em}
+  .intro h1 br{display:none}
+  .intro h1 span{margin-inline-start:8px}
+  .meta{border:0;padding-top:8px;font-size:12px}
+  .game{height:calc(100svh - 145px);min-height:360px;padding:22px}
+  .game.is-correct{box-shadow:6px 6px 0 #267044}
+  .game.is-wrong{box-shadow:6px 6px 0 #b63e33}
+  .quote-mark{margin-top:30px}
+  .quote{font-size:26px}
+  .quote-media{max-width:100%;margin-block-start:20px;padding-block-start:16px;border-top:1px solid #b9b8aa}
+  .game-content{scrollbar-gutter:auto}
+}
+@media(max-width:380px){
+  .page{padding-inline:16px}
+  .game{padding:18px}
+  .quote{font-size:23px}
+  .actions{gap:8px}
+  .actions button{font-size:15px}
+}
+</style>
+</head>
+<body>
+  <div class="page">
+    <main id="app"><p>טוענים את המשחק…</p></main>
+    <noscript><p>יש להפעיל JavaScript בדפדפן כדי לשחק.</p></noscript>
+  </div>
+  <script>window.offlineQuotes = [{"quote":"מפלגת הליכוד ביתנו מדברת על ערכים. מדינת ישראל, מדינה יהודית שבירתה ירושלים לנצח נצחים. כפיים!","real":true,"context":"מתוך נאום בפני תלמידי תיכון עמי אסף בבית ברל, ב־18 בדצמבר 2012. כתבת וואלה מ־19 בדצמבר מתארת את הנאום ואת הקריאה \"כפיים!\".","source":"https://www.walla.co.il/news/israel/2598370","video":"https://www.youtube.com/watch?v=wstiIkc16ug"},{"quote":"אם הרכבת מאחרת, זה רק מפני שהיא מחכה שהציבור יהיה מוכן למהפכה.","real":false},{"quote":"אני חברת כנסת. אני לא צריכה לחשוב פעמיים לפני כל מילה שאני אומרת.","real":true,"context":"הציטוט מובא בטור הדעה של אבנר בורוכוב \"תודה לך, מירי רגב\", שפורסם בוואלה ב־3 בנובמבר 2013. הטור אינו מציין את נסיבות האמירה המקוריות.","source":"https://news.walla.co.il/item/2691283"},{"quote":"התרבות שייכת לכולם, אבל קודם כל צריך לשאול את כולם מה הם חושבים עליה.","real":false},{"quote":"הלוואי והיית עושה בכל הקדנציות שלך, לא רבע, שליש, ממה שאני עשיתי בשלוש וחצי שנים האחרונות","real":true,"context":"בפנייה לח״כ חסון. המקור: טור דעה בהארץ מ־16 בינואר 2024 ","source":"https://www.haaretz.co.il/opinions/2024-01-16/ty-article-opinion/.premium/0000018d-11ba-dac4-a9cf-53fb2dca0000"},{"quote":"הממשלה הזו עשתה בשנה הזאת דברים מדהימים. דברים מדהימים. כל כך הרבה אנשים נמצאים במלונות, הכל ממומן על ידי הממשלה.","real":true,"context":"בריאיון לרדיו קול חי ב־4 ביוני 2024, בהתייחסות למימון שהותם של מפונים מהדרום ומהצפון במלונות. הדברים דווחו ב־ynet.","source":"https://www.ynet.co.il/news/article/s1tfcaher"},{"quote":"אני לא מחפשת כותרות, הכותרות פשוט יודעות איפה למצוא אותי.","real":false},{"quote":"אתם נמצאים בחו״ל - תיהנו!","real":true,"context":"בתדרוך לתקשורת ביוני 2025 על החזרת ישראלים שנתקעו בחו״ל בעקבות מבצע \"עם כלביא\". בדבריה הוסיפה: \"אני יודעת שזה לא פשוט\", והתייחסה לבחינת סיוע של משרד האוצר.","source":"https://www.ynet.co.il/news/article/hkhfbdt7gl"},{"quote":"איזה יופי אתה יודע עברית","real":true,"context":"לשחקן הכדורסל שון דאוסון, יליד ישראל, בטקס פרסי הספורט ב־2017.","source":"https://www.globes.co.il/news/article.aspx?did=1001170758"},{"quote":"מי שלא רואה את הדרך שלנו, כנראה מסתכל מהחלון הלא נכון.","real":false},{"quote":"עשיתי מהפכות שאני חושבת ששני שרים אחריי לא יצליחו לתקן את מה שעשיתי.","real":true,"context":"בלאומיאדה באילת, בינואר 2019, לקראת הפריימריז בליכוד. הציטוט מופיע בכתבתה של טל שלו בוואלה מ־12 בינואר 2019.","source":"https://elections.walla.co.il/item/3212876","video":"https://x.com/newsisrael13/status/1084469321668194305"},{"quote":"אני אומרת את מה שכולם חושבים, גם כשכולם עוד לא הספיקו לחשוב על זה.","real":false},{"quote":"גאה במארגני הליכודיאדה כי מעולם לא סיקרו את יום השואה כמו שסיקרו השנה בזכות הליכודיאדה.","real":true,"context":"בעקבות הביקורת על קיום הליכודיאדה ביום השואה הבינלאומי, בינואר 2017. כתבת חדשות 2 מביאה את דבריה ואת תגובות יצחק הרצוג ויאיר לפיד.","source":"https://www.mako.co.il/news-military/politics-q1_2017/Article-cf2391bc274e951004.htm"},{"quote":"יש מי שרואה פקק, אני רואה הזדמנות למפגש בין אזרחי ישראל.","real":false},{"quote":"כשאני מקבלת החלטה, אני קודם כל מקשיבה לציבור ואז הציבור מקשיב לי.","real":false},{"quote":"החלטנו שרוצים להפיל את הממשלה, אז אין כאבי בטן. לא עם אונס, לא עם נשים מוכות ולא עם חיילים","real":true,"context":"מתוך הקלטה מישיבת סיעת הליכוד במאי 2022, בזמן שהמפלגה הייתה באופוזיציה, על מדיניות ההצבעה נגד ממשלת בנט–לפיד. לאחר פרסום ההקלטה אמרה רגב שאין לה על מה להתנצל.","source":"https://www.kan.org.il/content/kan-news/politic/257692/"}];</script>
+  <script>const app = document.querySelector('#app');
+let catalog = [], questions = [], index = 0, score = 0, answered = false;
+let ui;
+
+function shuffle(items) {
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function mountGame(data) {
+  catalog = data;
+  app.innerHTML = `<div class="layout"><section class="intro"><p class="eyebrow">המשחק שיבדוק כמה אתם באמת מכירים</p><h1>מירי<br><span>אמרה?</span></h1><p class="intro-copy">יש דברים שרק מירי רגב יכולה להגיד. <strong>או שלא?</strong><br>${catalog.length} ציטוטים, חלקם אמיתיים וחלקם המצאה. נראה אתכם מבדילים.</p><div class="meta"><span>${catalog.length} שאלות</span><span>בלי גוגל, כן?</span></div><div id="desktop-media-slot"></div></section><section class="game" aria-label="משחק הציטוטים"><div class="card-top"><span id="card-label">האם מירי אמרה את זה?</span><span class="counter" id="counter"></span></div><div class="progress" role="progressbar" aria-label="התקדמות במשחק" aria-valuemin="0" aria-valuemax="${catalog.length}" aria-valuenow="0"><span id="progress-fill"></span></div><div class="game-content"><div id="question"><div class="quote-mark" aria-hidden="true">"</div><blockquote class="quote" id="quote" tabindex="-1"></blockquote><div id="feedback" aria-live="polite" hidden></div><div id="mobile-media-slot"></div></div><div id="result" hidden><div class="result-number" id="result-number"></div><h2 class="result-title" id="result-title" tabindex="-1"></h2><p class="result-copy" id="result-copy"></p></div></div><div class="game-controls"><p class="prompt" id="prompt">אז מה אתם אומרים?</p><div class="actions" id="answers"><button class="yes" data-answer="true">כן, היא אמרה</button><button class="no" data-answer="false">לא, המצאתם</button></div><button class="next" id="next" hidden>לציטוט הבא ←</button><button class="next" id="restart" hidden>משחקים שוב ←</button></div></section></div>`;
+  ui = Object.fromEntries(['card-label', 'counter', 'progress-fill', 'question', 'quote', 'feedback', 'result', 'result-number', 'result-title', 'result-copy', 'prompt', 'answers', 'next', 'restart'].map(id => [id, app.querySelector(`#${id}`)]));
+  ui.card = app.querySelector('.game');
+  ui.content = app.querySelector('.game-content');
+  ui.progress = app.querySelector('.progress');
+  ui.media = document.createElement('section');
+  ui.media.className = 'quote-media';
+  ui.media.setAttribute('aria-label', 'סרטון הציטוט');
+  ui.media.hidden = true;
+  const mobile = window.matchMedia('(max-width: 800px)');
+  const placeMedia = () => {
+    const slot = app.querySelector(mobile.matches ? '#mobile-media-slot' : '#desktop-media-slot');
+    if (ui.media.parentElement !== slot) slot.append(ui.media);
+  };
+  mobile.addEventListener('change', placeMedia);
+  placeMedia();
+  app.querySelectorAll('[data-answer]').forEach(button => button.addEventListener('click', () => answer(button.dataset.answer === 'true')));
+  ui.next.addEventListener('click', () => {
+    index++;
+    if (index < questions.length) renderQuestion();
+    else renderResult();
+  });
+  ui.restart.addEventListener('click', () => startGame());
+  startGame(false);
+}
+
+function startGame(focus = true) {
+  questions = shuffle(catalog);
+  index = 0;
+  score = 0;
+  renderQuestion(focus);
+}
+
+function renderQuestion(focus = true) {
+  const q = questions[index];
+  answered = false;
+  ui.card.classList.remove('is-correct', 'is-wrong');
+  ui['card-label'].textContent = 'האם מירי אמרה את זה?';
+  ui.counter.textContent = `${String(index + 1).padStart(2, '0')} / ${questions.length}`;
+  ui['progress-fill'].style.width = `${index / questions.length * 100}%`;
+  ui.progress.setAttribute('aria-valuenow', index);
+  ui.question.hidden = false;
+  ui.result.hidden = true;
+  ui.quote.textContent = q.quote;
+  ui.feedback.hidden = true;
+  ui.feedback.innerHTML = '';
+  ui.media.innerHTML = '';
+  ui.media.hidden = true;
+  ui.prompt.hidden = false;
+  ui.answers.hidden = false;
+  ui.next.hidden = true;
+  ui.restart.hidden = true;
+  ui.content.scrollTop = 0;
+  if (focus) ui.quote.focus({ preventScroll: true });
+}
+function renderVideo(video) {
+  if (!video) return '';
+  try {
+    const url = new URL(video);
+    const host = url.hostname.replace(/^www\./, '');
+    if (['x.com', 'twitter.com'].includes(host)) {
+      const post = url.pathname.match(/^\/([a-zA-Z0-9_]+)\/status\/(\d+)\/?$/);
+      if (!post) return '';
+      const link = `https://twitter.com/${post[1]}/status/${post[2]}`;
+      const embed = ['http:', 'https:'].includes(location.protocol)
+        ? `<blockquote class="twitter-tweet" data-dnt="true" data-conversation="none"><a href="${link}" target="_blank" rel="noopener noreferrer">הסרטון של חדשות 13</a></blockquote>` : '';
+      return `<div class="quote-video quote-video-x">${embed}<a href="https://x.com/${post[1]}/status/${post[2]}" target="_blank" rel="noopener noreferrer">▶ לצפייה בסרטון ב־X ↗</a></div>`;
+    }
+    const id = host === 'youtu.be' ? url.pathname.slice(1) : host === 'youtube.com' ? url.searchParams.get('v') : null;
+    if (!id || !/^[a-zA-Z0-9_-]{11}$/.test(id)) return '';
+    if (!['http:', 'https:'].includes(location.protocol)) {
+      return `<div class="quote-video"><p>לצפייה בסרטון:</p><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">▶ לצפייה ב־YouTube ↗</a></div>`;
+    }
+    return `<div class="quote-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="סרטון הציטוט של מירי רגב" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">לצפייה ב־YouTube ↗</a></div>`;
+  } catch {
+    return '';
+  }
+}
+let xWidgetsPromise;
+function loadXVideo(container) {
+  const post = container.querySelector('.twitter-tweet');
+  if (!post) return;
+  if (!xWidgetsPromise) {
+    xWidgetsPromise = new Promise((resolve, reject) => {
+      if (window.twttr?.widgets) { resolve(window.twttr.widgets); return; }
+      const script = document.createElement('script');
+      script.src = 'https://platform.twitter.com/widgets.js';
+      script.async = true;
+      script.onload = () => window.twttr?.widgets ? resolve(window.twttr.widgets) : reject(new Error('X embed unavailable'));
+      script.onerror = () => { script.remove(); reject(new Error('X embed unavailable')); };
+      document.head.append(script);
+    });
+  }
+  xWidgetsPromise.then(widgets => {
+    if (post.isConnected) widgets.load(post.parentElement);
+  }).catch(() => {
+    // The direct watch link remains usable if X or a blocker prevents embedding.
+    xWidgetsPromise = undefined;
+  });
+}
+function answer(choice) {
+  if (answered) return;
+  answered = true;
+  const q = questions[index], correct = choice === q.real;
+  if (correct) score++;
+  ui.card.classList.add(correct ? 'is-correct' : 'is-wrong');
+  ui.prompt.hidden = true;
+  ui.answers.hidden = true;
+  ui.feedback.className = 'feedback';
+  ui.feedback.innerHTML = `<h2>${correct ? '✓ בול! תשובה נכונה.' : '✕ לא הפעם.'}</h2><p><strong>${q.real ? q.sourceStatus === 'unverified' ? 'הציטוט מיוחס למירי רגב; המקור טרם אומת.' : 'מירי רגב אכן אמרה את זה.' : 'הציטוט הזה מומצא.'}</strong> ${q.real ? q.context : 'אבל מתאים למירי, לא?'}</p>${q.real && q.source ? `<a href="${q.source}" target="_blank" rel="noopener noreferrer">לכתבה עם הציטוט ↗</a>` : ''}`;
+  ui.feedback.hidden = false;
+  const video = renderVideo(q.video);
+  ui.media.innerHTML = video ? '<h2 class="media-heading">הציטוט במקור</h2>' + video : '';
+  ui.media.hidden = !video;
+  loadXVideo(ui.media);
+  ui.next.textContent = index === questions.length - 1 ? 'לתוצאה שלי ←' : 'לציטוט הבא ←';
+  ui.next.hidden = false;
+  ui['progress-fill'].style.width = `${(index + 1) / questions.length * 100}%`;
+  ui.progress.setAttribute('aria-valuenow', index + 1);
+  // Keep the viewport still; reveal feedback inside the persistent game card.
+  ui.content.scrollTop = ui.feedback.offsetTop;
+  ui.next.focus({ preventScroll: true });
+}
+
+function renderResult() {
+  const message = score / questions.length >= .8 ? 'אתם מכירים את מירי ממש טוב.' : score / questions.length >= .5 ? 'יש לכם אוזן טובה לציטוטים.' : 'כנראה שלא תמיד קל להבדיל בין המציאות לדמיון.';
+  ui.card.classList.remove('is-correct', 'is-wrong');
+  ui['card-label'].textContent = 'סיימתם את המשחק';
+  ui.counter.textContent = 'התוצאה שלכם';
+  ui.question.hidden = true;
+  ui.feedback.innerHTML = '';
+  ui.media.innerHTML = '';
+  ui.media.hidden = true;
+  ui.result.hidden = false;
+  ui['result-number'].innerHTML = `${score}<small> / ${questions.length}</small>`;
+  ui['result-title'].textContent = message;
+  ui['result-copy'].textContent = `עניתם נכון על ${score} מתוך ${questions.length} שאלות. רוצים לנסות שוב?`;
+  ui.prompt.hidden = true;
+  ui.answers.hidden = true;
+  ui.next.hidden = true;
+  ui.restart.hidden = false;
+  ui.content.scrollTop = 0;
+  ui['result-title'].focus({ preventScroll: true });
+}
+
+if (location.protocol === 'file:') {
+  mountGame(window.offlineQuotes);
+} else {
+  fetch('quotes.json')
+    .then(response => { if (!response.ok) throw new Error('Could not load quotes'); return response.json(); })
+    .then(mountGame)
+    .catch(() => mountGame(window.offlineQuotes));
+}
+</script>
+</body>
+</html>
